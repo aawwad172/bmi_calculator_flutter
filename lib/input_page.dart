@@ -4,6 +4,8 @@ import 'package:bmi_calculator_flutter/card_content.dart';
 import 'package:bmi_calculator_flutter/reusable_card.dart';
 import 'package:flutter/material.dart';
 import 'constants.dart';
+import 'rounded_icon_button.dart';
+import 'result_page.dart';
 
 class InputPage extends StatefulWidget {
   const InputPage({super.key});
@@ -15,7 +17,33 @@ class InputPage extends StatefulWidget {
 class _InputPageState extends State<InputPage> {
   Gender? selectedGender;
 
-  int heightOfTheUser = 180;
+  int heightOfUser = 180;
+  int weightOfUser = 60;
+  int ageOfUser = 20;
+
+  void addWeight() {
+    setState(() {
+      weightOfUser++;
+    });
+  }
+
+  void addAge() {
+    setState(() {
+      ageOfUser++;
+    });
+  }
+
+  void subtractWeight() {
+    setState(() {
+      weightOfUser--;
+    });
+  }
+
+  void subtractAge() {
+    setState(() {
+      ageOfUser--;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -82,7 +110,7 @@ class _InputPageState extends State<InputPage> {
                     textBaseline: TextBaseline.alphabetic,
                     children: [
                       Text(
-                        heightOfTheUser.toString(),
+                        heightOfUser.toString(),
                         style: kNumbersTextStyle,
                       ),
                       const Text(
@@ -93,7 +121,9 @@ class _InputPageState extends State<InputPage> {
                   ),
                   SliderTheme(
                     data: SliderTheme.of(context).copyWith(
+                      inactiveTrackColor: const Color(0xFF8D8E98),
                       thumbColor: const Color(0xFFEB1555),
+                      overlayColor: const Color(0x29EB1555),
                       thumbShape: const RoundSliderThumbShape(
                         enabledThumbRadius: 15.0,
                       ),
@@ -104,11 +134,11 @@ class _InputPageState extends State<InputPage> {
                     child: Slider(
                       onChanged: (value) {
                         setState(() {
-                          heightOfTheUser = value.round();
+                          heightOfUser = value.round();
                           // log(value.toString());
                         });
                       },
-                      value: heightOfTheUser.toDouble(),
+                      value: heightOfUser.toDouble(),
                       inactiveColor: const Color(0xFF8E8D98),
                       min: 120.0,
                       max: 250.0,
@@ -118,23 +148,92 @@ class _InputPageState extends State<InputPage> {
               ),
             ),
           ),
-          const Expanded(
+          Expanded(
             child: Row(
               children: [
                 Expanded(
-                  child: ReusableCard(color: kActiveCardsColor),
+                  child: ReusableCard(
+                    color: kActiveCardsColor,
+                    cardChild: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        const Text(
+                          'WEIGHT',
+                          style: kLabelTextStyle,
+                        ),
+                        Text(
+                          weightOfUser.toString(),
+                          style: kNumbersTextStyle,
+                        ),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          textDirection: TextDirection.rtl,
+                          children: [
+                            RoundIconButton(
+                              icon: Icons.add,
+                              onPress: addWeight,
+                            ),
+                            const SizedBox(width: 10.0),
+                            RoundIconButton(
+                              icon: Icons.remove,
+                              onPress: subtractWeight,
+                            ),
+                          ],
+                        )
+                      ],
+                    ),
+                  ),
                 ),
                 Expanded(
-                  child: ReusableCard(color: kActiveCardsColor),
+                  child: ReusableCard(
+                    color: kActiveCardsColor,
+                    cardChild: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        const Text('AGE', style: kLabelTextStyle),
+                        Text(
+                          ageOfUser.toString(),
+                          style: kNumbersTextStyle,
+                        ),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          textDirection: TextDirection.rtl,
+                          children: [
+                            RoundIconButton(
+                              icon: Icons.add,
+                              onPress: addAge,
+                            ),
+                            const SizedBox(width: 10.0),
+                            RoundIconButton(
+                              icon: Icons.remove,
+                              onPress: subtractAge,
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
+                  ),
                 ),
               ],
             ),
           ),
-          Container(
-            color: kButtonContainerColor,
-            margin: const EdgeInsets.only(top: 10.0),
-            width: double.infinity,
-            height: kButtonContainerHeight,
+          GestureDetector(
+            child: Container(
+              color: kButtonContainerColor,
+              margin: const EdgeInsets.only(top: 10.0),
+              width: double.infinity,
+              height: kButtonContainerHeight,
+              child: Center(
+                child: Text(
+                  'Calculate',
+                  style: kLabelTextStyle.copyWith(
+                      fontSize: 50, color: Colors.white),
+                ),
+              ),
+            ),
+            onTap: () {
+              Navigator.pushNamed(context, 'Result Page');
+            },
           ),
         ],
       ),
